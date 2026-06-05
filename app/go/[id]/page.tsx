@@ -5,42 +5,51 @@ import { useParams } from 'next/navigation';
 import Adsterra from '@/components/Adsterra';
 
 export default function GoPage() {
-    const params = useParams();
-
-    const [countdown, setCountdown] = useState(3);
+    const { id } = useParams<{ id: string }>();
+    const [url, setUrl] = useState('');
+    const [count, setCount] = useState(3);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCountdown((prev) => prev - 1);
+        const run = async () => {
+            const res = await fetch(`/api/links/${id}/redirect`);
+            const data = await res.json();
+
+            setUrl(data.url);
+        };
+
+        run();
+    }, [id]);
+
+    useEffect(() => {
+        const t = setInterval(() => {
+            setCount((c) => c - 1);
         }, 1000);
 
-        return () => clearInterval(timer);
+        return () => clearInterval(t);
     }, []);
 
     useEffect(() => {
-        if (countdown <= 0) {
-            fetch(`/api/links/${params.id}/redirect`)
-                .then((res) => res.json())
-                .then((data) => {
-                    window.location.href = data.url;
-                });
+        if (count <= 0 && url) {
+            window.location.href = url;
         }
-    }, [countdown, params.id]);
+    }, [count, url]);
 
     return (
-        <main className="min-h-screen bg-slate-950 flex items-center justify-center">
-            <div className="max-w-xl w-full p-6">
+        <main className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+            <div className="text-center space-y-4">
 
-                <h1 className="text-3xl font-bold text-center mb-4">
-                    Please Wait
+                <h1 className="text-2xl font-bold">
+                    Redirecting...
                 </h1>
 
-                <p className="text-center mb-8">
-                    Redirecting in {countdown} seconds
-                </p>
+                <p>{count}</p>
 
+                {/* ADSSTERA INI */}
                 <Adsterra />
 
+                <p className="text-sm text-gray-400">
+                    Please wait while we prepare your link
+                </p>
             </div>
         </main>
     );

@@ -7,32 +7,23 @@ const supabase = createClient(
 );
 
 export async function GET(
-    request: Request,
-    { params }: { params: Promise<{ id: string }> }
+    req: Request,
+    { params }: { params: { id: string } }
 ) {
-    const { id } = await params;
-
     const { data } = await supabase
         .from('links')
         .select('url, views')
-        .eq('id', id)
+        .eq('id', params.id)
         .single();
 
     if (!data) {
-        return NextResponse.json(
-            { error: 'Not Found' },
-            { status: 404 }
-        );
+        return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
-    // 
+
     await supabase
         .from('links')
-        .update({
-            views: (data.views || 0) + 1,
-        })
-        .eq('id', id);
+        .update({ views: (data.views || 0) + 1 })
+        .eq('id', params.id);
 
-    return NextResponse.json({
-        url: data.url,
-    });
+    return NextResponse.json({ url: data.url });
 }
