@@ -35,22 +35,18 @@ export default function GoPage() {
     }, [count, url]);
 
     return (
-        <main className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
-            <div className="text-center space-y-4">
+        <main className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-white">
 
-                <h1 className="text-2xl font-bold">
-                    Redirecting...
-                </h1>
+            <h1 className="text-2xl font-bold mb-4">
+                Redirecting...
+            </h1>
 
-                <p>{count}</p>
+            <p className="mb-10">Please wait...</p>
 
-                {/* ADSSTERA INI */}
-                <Adsterra />
+            {/* bikin page “hidup” */}
+            <div className="h-[200vh]" />
 
-                <p className="text-sm text-gray-400">
-                    Please wait while we prepare your link
-                </p>
-            </div>
+            <Adsterra />
         </main>
     );
 }
