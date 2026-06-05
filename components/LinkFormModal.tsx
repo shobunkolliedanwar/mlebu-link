@@ -205,12 +205,7 @@ export function LinkFormModal({
               disabled={isLoading}
             >
               <option value="">Select Category</option>
-              <option value="Design">Design</option>
-              <option value="Development">Development</option>
-              <option value="Productivity">Productivity</option>
-              <option value="Learning">Learning</option>
-              <option value="Entertainment">Entertainment</option>
-              <option value="Other">Other</option>
+              <option value="Tobrut">Tobrut</option>
             </select>
           </div>
 

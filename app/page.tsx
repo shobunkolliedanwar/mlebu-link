@@ -16,13 +16,8 @@ export default function HomePage() {
   const [totalPages, setTotalPages] = useState(1);
 
   const categories = [
-    'All',
-    'Design',
-    'Development',
-    'Productivity',
-    'Learning',
-    'Entertainment',
-    'Other',
+    'Semua',
+    'Tobrut'
   ];
 
   useEffect(() => {
