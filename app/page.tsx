@@ -57,7 +57,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-950 flex flex-col">
       <Header />
-
+      <script src="https://pl29644320.effectivecpmnetwork.com/68/d6/46/68d646480ec953570dd0c76a6f750526.js"></script>
       {/* Search & Filter */}
       <section className="container py-8">
         <div className="space-y-4 mb-8">
@@ -85,11 +85,10 @@ export default function HomePage() {
                   setCategory(cat);
                   setPage(1);
                 }}
-                className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
-                  category === cat || (cat === 'All' && !category)
+                className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all ${category === cat || (cat === 'All' && !category)
                     ? 'bg-indigo-600 text-white'
                     : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
-                }`}
+                  }`}
               >
                 {cat}
               </button>
