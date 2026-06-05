@@ -24,7 +24,7 @@ export async function GET(
             { status: 404 }
         );
     }
-
+    // 
     await supabase
         .from('links')
         .update({
