@@ -35,16 +35,19 @@ export default function GoPage() {
     }, [count, url]);
 
     return (
-        <main className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-white">
+        <main className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
+            <div className="text-center space-y-4">
 
-            <h1 className="text-2xl font-bold mb-4">
-                Redirecting...
-            </h1>
+                <h1 className="text-2xl font-bold">
+                    Redirecting...
+                </h1>
 
-            <p className="mb-10">Please wait...</p>
+                <p>Please wait...</p>
 
-            {/* bikin page “hidup” */}
-            <div className="h-[200vh]" />
+                {/* 🔥 penting: bikin page tidak kosong */}
+                <div className="h-[150vh]" />
+
+            </div>
 
             <Adsterra />
         </main>
