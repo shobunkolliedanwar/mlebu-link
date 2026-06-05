@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (category) {
+    if (category && category !== 'Semua') {
       query = query.eq('category', category);
     }
 
