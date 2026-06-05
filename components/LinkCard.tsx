@@ -30,7 +30,7 @@ export function LinkCard({
       console.error(error);
     }
 
-    window.location.href = `/go/${link.id}`;
+    window.open(link.url, '_blank');
   };
 
   return (
