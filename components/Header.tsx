@@ -63,7 +63,7 @@ export function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center">
-            <span className="text-white font-bold text-lg">M</span>
+            <span className="text-white font-bold text-lg">BL</span>
           </div>
           <h1 className="text-xl font-bold group-hover:text-indigo-400 transition-colors">
             Brutal Link
