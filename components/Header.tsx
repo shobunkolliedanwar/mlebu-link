@@ -66,7 +66,7 @@ export function Header() {
             <span className="text-white font-bold text-lg">M</span>
           </div>
           <h1 className="text-xl font-bold group-hover:text-indigo-400 transition-colors">
-            Mlebu Link
+            Brutal Link
           </h1>
         </Link>
 

@@ -1,4 +1,4 @@
-# ⚡ Performance Optimization & Scaling Guide - Mlebu Link
+# ⚡ Performance Optimization & Scaling Guide - Brutal Link
 
 Panduan lengkap untuk optimize performance dan scale aplikasi.
 

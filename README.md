@@ -1,4 +1,4 @@
-# 🔗 Mlebu Link - Link Directory Platform
+# 🔗 Brutal Link - Link Directory Platform
 
 Aplikasi fullstack modern untuk berbagi dan menemukan links terbaik di internet. Dibangun dengan Next.js, Supabase, dan teknologi modern lainnya.
 

@@ -195,7 +195,7 @@ export default function AdminPage() {
           <div>
             <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
             <p className="text-slate-400">
-              Kelola dan upload links untuk Mlebu Link
+              Kelola dan upload links untuk Brutal Link
             </p>
           </div>
           <button

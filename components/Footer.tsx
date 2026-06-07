@@ -16,7 +16,7 @@ export function Footer() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center">
                 <span className="text-white font-bold">M</span>
               </div>
-              <span className="font-bold">Mlebu Link</span>
+              <span className="font-bold">Brutal Link</span>
             </div>
             <p className="text-sm text-slate-400">
               Platform untuk berbagi dan menemukan link terbaik
@@ -100,7 +100,7 @@ export function Footer() {
         <div className="border-t border-slate-700 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <p className="text-sm text-slate-400 mb-4 md:mb-0">
-              © {currentYear} Mlebu Link. All rights reserved.
+              © {currentYear} Brutal Link. All rights reserved.
             </p>
             <div className="text-sm text-slate-500">
               Made with ❤️ for the community

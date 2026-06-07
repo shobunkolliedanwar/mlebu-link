@@ -63,7 +63,7 @@ export default function SignInPage() {
           {/* Card */}
           <div className="rounded-lg border border-slate-700 bg-slate-900 p-8">
             <h1 className="text-2xl font-bold mb-2">Welcome Back</h1>
-            <p className="text-slate-400 mb-8">Sign in to your Mlebu Link account</p>
+            <p className="text-slate-400 mb-8">Sign in to your Brutal Link account</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email */}

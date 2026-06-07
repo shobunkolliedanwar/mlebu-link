@@ -65,7 +65,7 @@ export default function SignUpPage() {
           {/* Card */}
           <div className="rounded-lg border border-slate-700 bg-slate-900 p-8">
             <h1 className="text-2xl font-bold mb-2">Create Account</h1>
-            <p className="text-slate-400 mb-8">Join Mlebu Link dan mulai berbagi links</p>
+            <p className="text-slate-400 mb-8">Join Brutal Link dan mulai berbagi links</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email */}
