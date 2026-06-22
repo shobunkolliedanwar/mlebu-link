@@ -3,6 +3,7 @@
 import './globals.css';
 import { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
+import Script from 'next/script';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -16,6 +17,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         {children}
         <Toaster position="top-right" reverseOrder={false} />
+        <Script
+          src="https://pl29842099.effectivecpmnetwork.com/8b/ad/72/8bad7200134709af27645af0bb39f3de.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

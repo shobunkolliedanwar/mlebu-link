@@ -30,7 +30,7 @@ export function LinkCard({
       console.error(error);
     }
 
-    window.open(link.url, '_blank');
+    window.location.href = `/go/${link.id}`;
   };
 
   return (
@@ -103,7 +103,7 @@ export function LinkCard({
             className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition-colors text-sm font-medium"
           >
             <ExternalLink size={16} />
-            Open
+            Buka
           </button>
 
           {isAdmin && (
