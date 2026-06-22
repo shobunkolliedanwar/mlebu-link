@@ -37,11 +37,11 @@ export function Footer() {
                   Sign In
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/auth/signup" className="hover:text-white transition-colors">
                   Sign Up
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
