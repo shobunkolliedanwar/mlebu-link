@@ -130,11 +130,11 @@ export default function SignInPage() {
             </form>
 
             {/* Divider */}
-            <div className="flex items-center gap-4 my-6">
+            {/* <div className="flex items-center gap-4 my-6">
               <div className="flex-1 h-px bg-slate-700" />
               <span className="text-sm text-slate-500">or</span>
               <div className="flex-1 h-px bg-slate-700" />
-            </div>
+            </div> */}
 
             {/* Sign Up Link */}
             {/* <p className="text-center text-slate-400">
