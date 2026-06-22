@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Header, Footer, LinkCard, LinkFormModal, LinkGridSkeleton } from '@/components';
 import { Link as LinkType, User } from '@/lib/types';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '@/lib/supabase';
 
@@ -180,6 +180,19 @@ export default function AdminPage() {
     }
   };
 
+  const handleLogout = async () => {
+    if (!confirm('Yakin ingin logout?')) return;
+
+    try {
+      await supabase.auth.signOut();
+
+      toast.success('Berhasil logout');
+      router.push('/auth/signin');
+    } catch {
+      toast.error('Gagal logout');
+    }
+  };
+
   if (!user) {
     return null;
   }
@@ -198,16 +211,26 @@ export default function AdminPage() {
               Kelola dan upload links untuk Brutal Link
             </p>
           </div>
-          <button
-            onClick={() => {
-              setEditingLink(null);
-              setIsModalOpen(true);
-            }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition-colors font-medium"
-          >
-            <Plus size={20} />
-            Add New Link
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-500 text-red-400 hover:bg-red-500/10 transition-colors font-medium"
+            >
+              <LogOut size={18} />
+              Logout
+            </button>
+
+            <button
+              onClick={() => {
+                setEditingLink(null);
+                setIsModalOpen(true);
+              }}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition-colors font-medium"
+            >
+              <Plus size={20} />
+              Add New Link
+            </button>
+          </div>
         </div>
 
         {/* Statistics */}
