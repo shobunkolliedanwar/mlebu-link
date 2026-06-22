@@ -46,8 +46,8 @@ Aplikasi fullstack modern untuk berbagi dan menemukan links terbaik di internet.
 
 1. **Clone repository**
 ```bash
-git clone https://github.com/yourusername/mlebu-link.git
-cd mlebu-link
+git clone https://github.com/yourusername/brutal-link.git
+cd brutal-link
 ```
 
 2. **Install dependencies**
@@ -86,7 +86,7 @@ Visit `http://localhost:3000` 🎉
 ## 🏗️ Project Structure
 
 ```
-mlebu-link/
+brutal-link/
 ├── app/
 │   ├── api/                    # API Routes
 │   │   ├── auth/               # Authentication
@@ -212,7 +212,7 @@ NEXT_PUBLIC_APP_URL = https://yourdomain.com
 - Ensure network access is allowed
 
 ### Upload not working?
-- Check storage bucket `mlebu-link-uploads` exists
+- Check storage bucket `brutal-link-uploads` exists
 - Verify RLS policies allow uploads
 - File size must be < 5MB
 

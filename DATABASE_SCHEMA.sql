@@ -134,17 +134,17 @@ CREATE POLICY "Anyone can view categories"
   USING (true);
 
 -- Create storage bucket for uploads
-INSERT INTO storage.buckets (id, name, public) VALUES ('mlebu-link-uploads', 'mlebu-link-uploads', true) ON CONFLICT (id) DO NOTHING;
+INSERT INTO storage.buckets (id, name, public) VALUES ('brutal-link-uploads', 'brutal-link-uploads', true) ON CONFLICT (id) DO NOTHING;
 
 -- Create storage policies
 CREATE POLICY "Anyone can view upload files"
   ON storage.objects FOR SELECT
-  USING (bucket_id = 'mlebu-link-uploads');
+  USING (bucket_id = 'brutal-link-uploads');
 
 CREATE POLICY "Only admins can upload files"
   ON storage.objects FOR INSERT
   WITH CHECK (
-    bucket_id = 'mlebu-link-uploads'
+    bucket_id = 'brutal-link-uploads'
     AND EXISTS (
       SELECT 1 FROM users
       WHERE users.id = auth.uid()
@@ -155,7 +155,7 @@ CREATE POLICY "Only admins can upload files"
 CREATE POLICY "Only admins can delete uploaded files"
   ON storage.objects FOR DELETE
   USING (
-    bucket_id = 'mlebu-link-uploads'
+    bucket_id = 'brutal-link-uploads'
     AND EXISTS (
       SELECT 1 FROM users
       WHERE users.id = auth.uid()

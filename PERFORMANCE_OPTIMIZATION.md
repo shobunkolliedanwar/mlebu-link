@@ -552,7 +552,7 @@ WHERE created_at < NOW() - INTERVAL '1 year';
 # 3. Archive to external storage
 
 # Cleanup old uploads
-supabase storage list mlebu-link-uploads
+supabase storage list brutal-link-uploads
 # Delete old files manually or with script
 ```
 

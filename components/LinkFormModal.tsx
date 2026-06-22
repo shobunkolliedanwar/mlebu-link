@@ -2,7 +2,7 @@
 
 import { Link as LinkType } from '@/lib/types';
 import { X, Upload } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
@@ -15,6 +15,15 @@ interface LinkFormModalProps {
   isLoading?: boolean;
 }
 
+const defaultFormData = {
+  title: '',
+  url: '',
+  description: '',
+  category: '',
+  tags: '',
+  thumbnail_url: '',
+};
+
 export function LinkFormModal({
   isOpen,
   onClose,
@@ -22,21 +31,44 @@ export function LinkFormModal({
   initialData,
   isLoading = false,
 }: LinkFormModalProps) {
-  const [formData, setFormData] = useState({
-    title: initialData?.title || '',
-    url: initialData?.url || '',
-    description: initialData?.description || '',
-    category: initialData?.category || '',
-    tags: initialData?.tags?.join(', ') || '',
-    thumbnail_url: initialData?.thumbnail_url || '',
-  });
-
+  const [formData, setFormData] = useState(defaultFormData);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        title: initialData.title || '',
+        url: initialData.url || '',
+        description: initialData.description || '',
+        category: initialData.category || '',
+        tags: initialData.tags?.join(', ') || '',
+        thumbnail_url: initialData.thumbnail_url || '',
+      });
+    } else {
+      setFormData(defaultFormData);
+    }
+  }, [initialData]);
+
+  console.log('formData.thumbnail_url', formData.thumbnail_url);
+
+  const updateField = (
+    field: keyof typeof formData,
+    value: string
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.title.trim() || !formData.url.trim() || !formData.category.trim()) {
+    if (
+      !formData.title.trim() ||
+      !formData.url.trim() ||
+      !formData.category.trim()
+    ) {
       toast.error('Title, URL, dan Category wajib diisi');
       return;
     }
@@ -48,35 +80,32 @@ export function LinkFormModal({
       return;
     }
 
-    const submitData = {
+    const submitData: Partial<LinkType> = {
       ...formData,
       tags: formData.tags
         .split(',')
-        .map((t) => t.trim())
+        .map((tag) => tag.trim())
         .filter(Boolean),
     };
 
     await onSubmit(submitData);
-    setFormData({
-      title: '',
-      url: '',
-      description: '',
-      category: '',
-      tags: '',
-      thumbnail_url: '',
-    });
+
+    setFormData(defaultFormData);
     onClose();
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
+
     if (!file) return;
 
     setUploading(true);
 
     try {
-      const formDataUpload = new FormData();
-      formDataUpload.append('file', file);
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
 
       const {
         data: { session },
@@ -87,13 +116,12 @@ export function LinkFormModal({
         return;
       }
 
-      const token = session?.access_token;
       const response = await fetch('/api/upload', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
-        body: formDataUpload,
+        body: uploadFormData,
       });
 
       const data = await response.json();
@@ -109,7 +137,11 @@ export function LinkFormModal({
 
       toast.success('Gambar berhasil diupload');
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Upload gagal');
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : 'Upload gagal'
+      );
     } finally {
       setUploading(false);
     }
@@ -119,23 +151,18 @@ export function LinkFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onClose}
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
       />
 
-      {/* Modal */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
         className="relative w-full max-w-md mx-4 bg-slate-900 border border-slate-700 rounded-lg p-6"
       >
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 hover:bg-slate-800 rounded-lg transition-colors"
@@ -148,58 +175,59 @@ export function LinkFormModal({
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Title */}
           <div>
-            <label className="block text-sm font-medium mb-2">Title *</label>
+            <label className="block text-sm font-medium mb-2">
+              Title *
+            </label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, title: e.target.value }))
+                updateField('title', e.target.value)
               }
               className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-              placeholder="e.g., Awesome Design Tool"
               disabled={isLoading}
             />
           </div>
 
-          {/* URL */}
           <div>
-            <label className="block text-sm font-medium mb-2">URL *</label>
+            <label className="block text-sm font-medium mb-2">
+              URL *
+            </label>
             <input
               type="url"
               value={formData.url}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, url: e.target.value }))
+                updateField('url', e.target.value)
               }
               className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-              placeholder="https://example.com"
               disabled={isLoading}
             />
           </div>
 
-          {/* Description */}
           <div>
-            <label className="block text-sm font-medium mb-2">Description</label>
+            <label className="block text-sm font-medium mb-2">
+              Description
+            </label>
             <textarea
+              rows={3}
               value={formData.description}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, description: e.target.value }))
+                updateField('description', e.target.value)
               }
               className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none"
-              placeholder="Optional description"
-              rows={3}
               disabled={isLoading}
             />
           </div>
 
-          {/* Category */}
           <div>
-            <label className="block text-sm font-medium mb-2">Category *</label>
+            <label className="block text-sm font-medium mb-2">
+              Category *
+            </label>
             <select
               value={formData.category}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, category: e.target.value }))
+                updateField('category', e.target.value)
               }
               className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
               disabled={isLoading}
@@ -209,7 +237,6 @@ export function LinkFormModal({
             </select>
           </div>
 
-          {/* Tags */}
           <div>
             <label className="block text-sm font-medium mb-2">
               Tags (comma separated)
@@ -218,56 +245,63 @@ export function LinkFormModal({
               type="text"
               value={formData.tags}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, tags: e.target.value }))
+                updateField('tags', e.target.value)
               }
               className="w-full px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-              placeholder="e.g., design, ui, free"
+              placeholder="design, ui, free"
               disabled={isLoading}
             />
           </div>
 
-          {/* Thumbnail Upload */}
           <div>
-            <label className="block text-sm font-medium mb-2">Thumbnail</label>
+            <label className="block text-sm font-medium mb-2">
+              Thumbnail
+            </label>
+
             <div className="space-y-2">
               {formData.thumbnail_url && (
                 <div className="relative w-full h-32 rounded-lg overflow-hidden">
                   <img
                     src={formData.thumbnail_url}
-                    alt="Thumbnail preview"
+                    alt="Thumbnail Preview"
                     className="w-full h-full object-cover"
                   />
                 </div>
               )}
+
               <label className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border-2 border-dashed border-slate-700 hover:border-indigo-500 cursor-pointer transition-colors">
                 <Upload size={18} />
-                <span>Choose Image</span>
+                <span>
+                  {uploading
+                    ? 'Uploading...'
+                    : 'Choose Image'}
+                </span>
+
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={handleFileUpload}
-                  disabled={uploading || isLoading}
                   className="hidden"
+                  disabled={uploading || isLoading}
+                  onChange={handleFileUpload}
                 />
               </label>
-              {uploading && <p className="text-sm text-slate-400">Uploading...</p>}
             </div>
           </div>
 
-          {/* Buttons */}
           <div className="flex gap-3 mt-6">
             <button
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="flex-1 px-4 py-2 rounded-lg border border-slate-700 hover:bg-slate-800 transition-colors disabled:opacity-50"
+              className="flex-1 px-4 py-2 rounded-lg border border-slate-700 hover:bg-slate-800 disabled:opacity-50"
             >
               Cancel
             </button>
+
             <button
               type="submit"
               disabled={isLoading || uploading}
-              className="flex-1 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition-colors disabled:opacity-50 font-medium"
+              className="flex-1 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 font-medium"
             >
               {isLoading ? 'Saving...' : 'Save Link'}
             </button>

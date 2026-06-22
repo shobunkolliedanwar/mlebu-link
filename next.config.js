@@ -5,7 +5,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**.supabase.co',
+        hostname: 'tvirqefqeldptsexjrnz.supabase.co',
       },
       {
         protocol: 'http',
@@ -15,25 +15,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'opengraph.b-cdn.net',
       },
-      {
-        protocol: 'https',
-        hostname: '**.cloudfront.net',
-      },
     ],
-    formats: ['image/avif', 'image/webp'],
-  },
-  headers: async () => {
-    return [
-      {
-        source: '/api/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
-          },
-        ],
-      },
-    ];
   },
 };
 

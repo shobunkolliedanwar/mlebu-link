@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
         .toBuffer();
 
       const { data, error } = await supabase.storage
-        .from('mlebu-link-uploads')
+        .from('brutal-link-uploads')
         .upload(`${folder}/${fileName}`, compressedBuffer, {
           contentType: 'image/webp',
           upsert: true,
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
       const {
         data: { publicUrl },
       } = supabase.storage
-        .from('mlebu-link-uploads')
+        .from('brutal-link-uploads')
         .getPublicUrl(`${folder}/${fileName}`);
 
       return NextResponse.json(
