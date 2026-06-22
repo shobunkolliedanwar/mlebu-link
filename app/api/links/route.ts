@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       query = query.or(
-        `title.ilike.%${search}%,tags.ilike.%${search}%,description.ilike.%${search}%,url.ilike.%${search}%`
+        `title.ilike.%${search}%,description.ilike.%${search}%,url.ilike.%${search}%,tags_search.ilike.%${search}%`
       );
     }
 

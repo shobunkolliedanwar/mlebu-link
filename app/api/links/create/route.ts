@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
       thumbnail_url,
       category,
       tags,
+      tags_search,
     } = await request.json();
 
     if (!title || !url || !category) {
@@ -77,6 +78,7 @@ export async function POST(request: NextRequest) {
         thumbnail_url: thumbnail_url || null,
         category: category.trim(),
         tags: tags || [],
+        tags_search: tags.join(' '),
         user_id: user.id,
         is_active: true,
         views: 0,
