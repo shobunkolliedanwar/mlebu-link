@@ -1,20 +1,18 @@
-import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin'
+
 export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { name } = body;
-
-    const slug = name
+    const slug = body.name
         .toLowerCase()
         .replace(/\s+/g, '-');
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
         .from('categories')
         .insert({
-            name,
-            slug
+            name: body.name,
+            slug,
         })
         .select()
         .single();
@@ -26,7 +24,5 @@ export async function POST(req: Request) {
         );
     }
 
-    return Response.json({
-        data
-    });
+    return Response.json({ data });
 }
