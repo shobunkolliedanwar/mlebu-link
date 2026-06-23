@@ -43,10 +43,7 @@ export default function AdminPage() {
       }
 
       setUser(userData);
-      await Promise.all([
-        fetchLinks(),
-        fetchCategories()
-      ]);
+      await fetchLinks();
     };
 
     checkAuth();
@@ -60,6 +57,17 @@ export default function AdminPage() {
       setCategories(data.data || []);
     } catch {
       toast.error('Gagal mengambil category');
+    }
+  };
+
+  const handleOpenCreateModal = async () => {
+    try {
+      await fetchCategories();
+
+      setEditingLink(null);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -294,10 +302,7 @@ export default function AdminPage() {
             </button>
 
             <button
-              onClick={() => {
-                setEditingLink(null);
-                setIsModalOpen(true);
-              }}
+              onClick={handleOpenCreateModal}
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition-colors font-medium"
             >
               <Plus size={20} />
@@ -336,7 +341,9 @@ export default function AdminPage() {
                 link={link}
                 isAdmin={true}
                 onDelete={handleDeleteLink}
-                onEdit={(link) => {
+                onEdit={async (link) => {
+                  await fetchCategories();
+
                   setEditingLink(link);
                   setIsModalOpen(true);
                 }}
