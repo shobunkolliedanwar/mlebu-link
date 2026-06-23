@@ -8,14 +8,11 @@ export async function GET() {
         .select('*')
         .order('name');
 
-    if (error) {
-        return NextResponse.json(
-            { error: error.message },
-            { status: 500 }
-        );
-    }
+    console.log(data);
+    console.log(error);
 
     return NextResponse.json({
-        data
+        data,
+        error
     });
 }
