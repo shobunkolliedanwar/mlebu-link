@@ -5,14 +5,10 @@ export async function GET() {
 
     const { data, error } = await supabase
         .from('categories')
-        .select('*')
-        .order('name');
+        .select('*');
 
-    console.log(data);
-    console.log(error);
-
-    return NextResponse.json({
+    return Response.json({
         data,
-        error
+        error,
     });
 }
