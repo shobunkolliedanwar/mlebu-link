@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Header, Footer, LinkCard, LinkFormModal, LinkGridSkeleton } from '@/components';
+import { Header, Footer, LinkCard, LinkFormModal, LinkGridSkeleton, CategoryFormModal } from '@/components';
 import { Link as LinkType, User, LinkCategory } from '@/lib/types';
 import { Plus, Trash2, LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -86,6 +86,54 @@ export default function AdminPage() {
     }
 
     return session.access_token;
+  };
+
+  const handleCreateCategory = async (
+    name: string
+  ) => {
+    try {
+
+      const token = await getAccessToken();
+
+      const response = await fetch(
+        '/api/categories/create',
+        {
+          method: 'POST',
+
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+
+          body: JSON.stringify({
+            name,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error);
+      }
+
+      toast.success(
+        'Category berhasil ditambahkan'
+      );
+
+      setIsCategoryModalOpen(false);
+
+      await fetchCategories();
+
+    } catch (error) {
+
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : 'Gagal membuat category'
+      );
+
+    }
   };
 
   const handleCreateLink = async (formData: Partial<LinkType>) => {
@@ -324,6 +372,14 @@ export default function AdminPage() {
         }
         isLoading={isSubmitting}
         categories={categories}
+      />
+
+      <CategoryFormModal
+        isOpen={isCategoryModalOpen}
+        onClose={() =>
+          setIsCategoryModalOpen(false)
+        }
+        onSubmit={handleCreateCategory}
       />
 
       <Footer />
