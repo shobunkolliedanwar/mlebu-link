@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Header, Footer, LinkCard, LinkFormModal, LinkGridSkeleton } from '@/components';
-import { Link as LinkType, User } from '@/lib/types';
+import { Link as LinkType, User, LinkCategory } from '@/lib/types';
 import { Plus, Trash2, LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '@/lib/supabase';
@@ -16,7 +16,7 @@ export default function AdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState<LinkType | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<LinkCategory[]>([]);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   useEffect(() => {
@@ -317,8 +317,13 @@ export default function AdminPage() {
           setEditingLink(null);
         }}
         initialData={editingLink || undefined}
-        onSubmit={editingLink ? handleUpdateLink : handleCreateLink}
+        onSubmit={
+          editingLink
+            ? handleUpdateLink
+            : handleCreateLink
+        }
         isLoading={isSubmitting}
+        categories={categories}
       />
 
       <Footer />
