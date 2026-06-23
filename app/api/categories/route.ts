@@ -1,16 +1,18 @@
 export const dynamic = 'force-dynamic';
-
 import { supabase } from '@/lib/supabase';
 
 export async function GET() {
-    const { data, error, count } = await supabase
+    const { data, error } = await supabase
         .from('categories')
-        .select('*', { count: 'exact' });
+        .select('*');
 
-    return Response.json({
-        count,
-        data,
-        error,
-        supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    });
+    return Response.json(
+        { data, error },
+        {
+            headers: {
+                'Cache-Control':
+                    'no-store, no-cache, must-revalidate, max-age=0',
+            },
+        }
+    );
 }
