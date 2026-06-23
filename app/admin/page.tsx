@@ -16,6 +16,8 @@ export default function AdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLink, setEditingLink] = useState<LinkType | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -41,11 +43,25 @@ export default function AdminPage() {
       }
 
       setUser(userData);
-      fetchLinks();
+      await Promise.all([
+        fetchLinks(),
+        fetchCategories()
+      ]);
     };
 
     checkAuth();
   }, [router]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/categories');
+      const data = await response.json();
+
+      setCategories(data.data || []);
+    } catch {
+      toast.error('Gagal mengambil category');
+    }
+  };
 
   const fetchLinks = async () => {
     setLoading(true);
@@ -212,6 +228,15 @@ export default function AdminPage() {
             </p>
           </div>
           <div className="flex items-center gap-3">
+
+            <button
+              onClick={() => setIsCategoryModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-500 text-emerald-400 hover:bg-emerald-500/10 transition-colors font-medium"
+            >
+              <Plus size={18} />
+              Add Category
+            </button>
+
             <button
               onClick={handleLogout}
               className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-500 text-red-400 hover:bg-red-500/10 transition-colors font-medium"
@@ -230,6 +255,7 @@ export default function AdminPage() {
               <Plus size={20} />
               Add New Link
             </button>
+
           </div>
         </div>
 
