@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Info } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { Link as LinkType, LinkCategory } from '@/lib/types';
@@ -36,6 +36,7 @@ export function LinkFormModal({
 }: LinkFormModalProps) {
   const [formData, setFormData] = useState(defaultFormData);
   const [uploading, setUploading] = useState(false);
+  const [showFilemoonInfo, setShowFilemoonInfo] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -187,7 +188,7 @@ export function LinkFormModal({
           opacity: 1,
           scale: 1,
         }}
-        className="relative z-10 w-full max-w-xl mx-4 bg-slate-900 border border-slate-700 rounded-2xl p-6"
+        className="relative z-10 w-full max-w-xl mx-4 bg-slate-900 border border-slate-700 rounded-2xl p-6 max-h-[90vh] overflow-y-auto"
       >
 
         <button
@@ -225,15 +226,42 @@ export function LinkFormModal({
                 )
               }
               className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+              placeholder="Contoh: Anime Action Episode 1"
             />
           </div>
 
-          {/* URL */}
+          {/* URL dengan Info Filemoon */}
 
           <div>
-            <label className="block mb-2 text-sm font-medium">
-              URL *
-            </label>
+            <div className="flex items-center gap-2 mb-2">
+              <label className="block text-sm font-medium">
+                URL *
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowFilemoonInfo(!showFilemoonInfo)}
+                className="p-1 rounded hover:bg-slate-800 transition"
+                title="Lihat info Filemoon"
+              >
+                <Info size={18} className="text-indigo-400" />
+              </button>
+            </div>
+
+            {/* Filemoon Info Box */}
+            {showFilemoonInfo && (
+              <div className="bg-indigo-900/30 border border-indigo-700 rounded-lg p-3 mb-3 text-sm text-indigo-100">
+                <p className="font-semibold mb-2">📽️ Format Filemoon:</p>
+                <p className="mb-2">
+                  ✅ <code className="bg-slate-800 px-1 rounded">https://filemoon.sx/e/VIDEO_ID</code> (Recommended)
+                </p>
+                <p className="mb-2">
+                  ✅ <code className="bg-slate-800 px-1 rounded">https://filemoon.sx/v/VIDEO_ID</code>
+                </p>
+                <p className="text-red-300">
+                  ❌ Jangan gunakan format <code className="bg-slate-800 px-1 rounded">/d/</code> (download)
+                </p>
+              </div>
+            )}
 
             <input
               type="url"
@@ -245,6 +273,7 @@ export function LinkFormModal({
                 )
               }
               className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3"
+              placeholder="https://filemoon.sx/e/abc123xyz"
             />
           </div>
 
@@ -265,6 +294,7 @@ export function LinkFormModal({
                 )
               }
               className="w-full rounded-lg bg-slate-800 border border-slate-700 px-4 py-3 resize-none"
+              placeholder="Deskripsi video (akan ditampilkan di halaman)"
             />
           </div>
 
@@ -309,7 +339,7 @@ export function LinkFormModal({
 
             <input
               type="text"
-              placeholder="anime, movie, premium"
+              placeholder="anime, movie, premium (pisahkan dengan koma)"
               value={formData.tags}
               onChange={(e) =>
                 updateField(
@@ -360,6 +390,14 @@ export function LinkFormModal({
 
             </label>
 
+          </div>
+
+          {/* INFO BOX */}
+          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-xs text-slate-300">
+            <p className="mb-1">💡 <strong>Tips:</strong></p>
+            <p>• Video dari Filemoon akan ditampilkan langsung (embed)</p>
+            <p>• URL lain akan di-redirect seperti biasa</p>
+            <p>• Iklan tetap akan ditampilkan di halaman video</p>
           </div>
 
           {/* BUTTON */}

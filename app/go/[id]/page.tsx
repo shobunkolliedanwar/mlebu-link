@@ -8,6 +8,29 @@ type LinkData = {
     id: string;
     title: string;
     url: string;
+    description?: string;
+};
+
+// Helper function untuk extract video ID dari URL filemoon
+const getFilemoonVideoId = (url: string): string | null => {
+    try {
+        const urlObj = new URL(url);
+        // Filemoon URLs: https://filemoon.sx/e/VIDEOID atau https://filemoon.sx/v/VIDEOID
+        const match = urlObj.pathname.match(/\/(e|v)\/([a-zA-Z0-9]+)/);
+        return match ? match[2] : null;
+    } catch {
+        return null;
+    }
+};
+
+// Helper function untuk check apakah URL adalah dari filemoon
+const isFilemoonUrl = (url: string): boolean => {
+    try {
+        const urlObj = new URL(url);
+        return urlObj.hostname.includes('filemoon') || urlObj.hostname.includes('streamfilemoon');
+    } catch {
+        return false;
+    }
 };
 
 export default function GoPage() {
@@ -16,8 +39,10 @@ export default function GoPage() {
     const [link, setLink] = useState<LinkData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isFilemoon, setIsFilemoon] = useState(false);
+    const [videoId, setVideoId] = useState<string | null>(null);
 
-    const [count, setCount] = useState(8);
+    const [count, setCount] = useState(3);
     const [ready, setReady] = useState(false);
     const [adsReady, setAdsReady] = useState(false);
 
@@ -35,6 +60,16 @@ export default function GoPage() {
                 const data = await res.json();
 
                 setLink(data);
+                
+                // Check if URL is from filemoon
+                const isFM = isFilemoonUrl(data.url);
+                setIsFilemoon(isFM);
+                
+                if (isFM) {
+                    const vid = getFilemoonVideoId(data.url);
+                    setVideoId(vid);
+                }
+
                 setReady(true);
 
                 // track go page view (important for analytics)
@@ -48,7 +83,7 @@ export default function GoPage() {
                     setAdsReady(true);
                 }, 800);
             } catch (err) {
-                setError('Unable to load redirect link');
+                setError('Unable to load video');
                 setLoading(false);
             }
         };
@@ -57,10 +92,10 @@ export default function GoPage() {
     }, [id]);
 
     // =========================
-    // TIMER (SAFE VERSION)
+    // TIMER (SAFE VERSION) - Only for non-filemoon links
     // =========================
     useEffect(() => {
-        if (!ready) return;
+        if (!ready || isFilemoon) return;
         if (count <= 0) return;
 
         const interval = setInterval(() => {
@@ -74,16 +109,16 @@ export default function GoPage() {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [ready]);
+    }, [ready, isFilemoon]);
 
     // =========================
-    // AUTO REDIRECT
+    // AUTO REDIRECT (only for non-filemoon)
     // =========================
     useEffect(() => {
-        if (count === 0 && link?.url) {
+        if (!isFilemoon && count === 0 && link?.url) {
             window.location.href = link.url;
         }
-    }, [count, link]);
+    }, [count, link, isFilemoon]);
 
     // =========================
     // ERROR STATE
@@ -105,7 +140,60 @@ export default function GoPage() {
     }
 
     // =========================
-    // UI
+    // FILEMOON EMBED VIEW
+    // =========================
+    if (isFilemoon && videoId && ready) {
+        return (
+            <main className="min-h-screen bg-slate-950 text-white px-4 py-8">
+                <div className="w-full max-w-4xl mx-auto space-y-6">
+                    {/* Title */}
+                    <div>
+                        <h1 className="text-3xl font-bold mb-2">{link?.title}</h1>
+                        {link?.description && (
+                            <p className="text-slate-400">{link.description}</p>
+                        )}
+                    </div>
+
+                    {/* ADS SLOT 1 */}
+                    {adsReady && (
+                        <div className="bg-slate-900 border border-slate-800 rounded-lg p-4">
+                            <AdsterraNative />
+                        </div>
+                    )}
+
+                    {/* Video Player */}
+                    <div className="w-full bg-black rounded-lg overflow-hidden">
+                        <iframe
+                            src={`https://filemoon.sx/e/${videoId}?k=0`}
+                            width="100%"
+                            height="600"
+                            frameBorder="0"
+                            allowFullScreen
+                            allow="fullscreen"
+                            className="w-full"
+                            style={{ minHeight: '600px' }}
+                        ></iframe>
+                    </div>
+
+                    {/* ADS SLOT 2 */}
+                    {adsReady && (
+                        <div className="bg-slate-900 border border-slate-800 rounded-lg p-4">
+                            <AdsterraNative />
+                        </div>
+                    )}
+
+                    {/* Info Box */}
+                    <div className="bg-slate-900 border border-slate-800 rounded-lg p-4 text-sm text-slate-400 space-y-2">
+                        <p>✅ Video sedang di-stream langsung dari server kami</p>
+                        <p>⚡ Gunakan VPN jika video tidak bisa diakses di region Anda</p>
+                    </div>
+                </div>
+            </main>
+        );
+    }
+
+    // =========================
+    // REDIRECT VIEW (for non-filemoon links)
     // =========================
     return (
         <main className="min-h-screen bg-slate-950 text-white flex items-center justify-center px-4">
